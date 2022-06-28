@@ -78,7 +78,7 @@ EOF
 	cat <<EOF >> e_r-r_corr-map_${resid}res_vs_${n_id_res_correrate_A}ress_open.gp
 set ylabel "E@^{res}_{${i}} (kJ/mol)" offset +1,0 
 
-plot "../eneres_scaled/ene_res.txt" u ${resid}:${i} pt 7 ps 1.2 lc rgb "red" notitle
+plot "../eneres/ene_res.txt" u ${resid}:${i} pt 7 ps 1.2 lc rgb "red" notitle
 EOF
     done
 
@@ -114,7 +114,7 @@ EOF
 	cat <<EOF >> e_r-r_no-corr-map_${resid}res_vs_${n_id_res_correrate_A}ress_close.gp
 set ylabel "E@^{res}_{${i}} (kJ/mol)" offset +1,0 
 
-plot "../../../close/analyses/eneres_scaled/ene_res.txt" u ${resid}:${i} w p pt 7 ps 2.0 lc rgb "black" notitle
+plot "../../../close/analyses_2/eneres/ene_res.txt" u ${resid}:${i} w p pt 7 ps 2.0 lc rgb "black" notitle
 EOF
     done
 
@@ -160,7 +160,7 @@ EOF
 	cat <<EOF >> e_r-r_corr-map_${resid}res_vs_${n_id_res_correrate_B}ress_close.gp
 set ylabel "E@^{res}_{${i}} (kJ/mol)" offset +1,0 
 
-plot "../../../close/analyses/eneres_scaled/ene_res.txt" u ${resid}:${i} w p pt 7 ps 2.0 lc rgb "black" notitle
+plot "../../../close/analyses/eneres/ene_res.txt" u ${resid}:${i} w p pt 7 ps 2.0 lc rgb "black" notitle
 EOF
     done
 
@@ -194,7 +194,7 @@ EOF
 	cat <<EOF >> e_r-r_no-corr-map_${resid}res_vs_${n_id_res_correrate_B}ress_open.gp
 set ylabel "E@^{res}_{${i}} (kJ/mol)" offset +1,0 
 
-plot "../eneres_scaled/ene_res.txt" u ${resid}:${i} w p pt 7 ps 2.0 lc rgb "red" notitle
+plot "../eneres/ene_res.txt" u ${resid}:${i} w p pt 7 ps 2.0 lc rgb "red" notitle
 
 EOF
     done

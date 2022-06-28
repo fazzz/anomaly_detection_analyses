@@ -28,8 +28,8 @@ if args.ij is None:
 else:
     ij_min = args.ij
 
-# read trajectory
-t = md.load(args.xtc,top=args.pdb_state1)
+## read trajectory
+#t = md.load(args.xtc,top=args.pdb_state1)
 
 # read reference structure
 r1 = md.load(args.pdb_state1)
@@ -64,12 +64,25 @@ with open (args.out_pairs, mode="w") as f:
     for pair in contact_pairs:
         f.write("%4d %4d\n" %(pair[0]+1, pair[1]+1))
 
-# compute contact distances
-dist = md.compute_contacts(t, contact_pairs)
+# read trajectory iteratively
+dist= []
+for chunk in md.iterload(args.xtc, top=args.pdb_state1, chunk=10):
+    # compute contact distances
+    dist_chunk, pairs_chunk = md.compute_contacts(chunk, contact_pairs)
+    dist.append(dist_chunk[0])
 
 # write contact distances
 with open (args.out_dist, mode="w") as f:
-    for frame in dist[0]:
+    for frame in dist:
         for d in frame:
             f.write("%8.3f " %(d*10.0))
         f.write("\n")
+
+#############################################
+# # write contact distances                 #
+# with open (args.out_dist, mode="w") as f: #
+#     for frame in dist[0]:                 #
+#         for d in frame:                   #
+#             f.write("%8.3f " %(d*10.0))   #
+#         f.write("\n")                     #
+#############################################

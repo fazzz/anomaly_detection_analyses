@@ -1,9 +1,9 @@
 #!/bin/sh
 
-sparsity=( 0.70 0.60 0.50 0.40 0.30 )
+sparsity=( 0.90 0.80 0.70 0.60 0.50 0.40 0.30 )
 nres=164
 
-cd eneres_scaled
+cd eneres
 
 nresm=`expr ${nres} - 1`;
 for i in `seq -w 001 ${nresm}`; do
@@ -17,7 +17,7 @@ awk '{sum=0;for(i=1;i<=NF;++i){sum=sum+$i;}printf("%8.3f \n",sum)}' ene_res.txt 
 
 rm *.temp
 
-cd ../../../close/analyses_2/eneres_scaled
+cd ../../../close/analyses_2/eneres
 
 nresm=`expr ${nres} - 1`;
 for i in `seq -w 001 ${nresm}`; do
@@ -53,8 +53,8 @@ cat <<EOF > job_assl.sh
 for r in ${sparsity[*]}; do
   echo "assl with r=\${r} start"
   assl2 -Sparsity \${r} -ndim ${nres} \\
-      ../eneres_scaled/ene_res.txt \\
-      ../../../close/analyses_2/eneres_scaled/ene_res.txt \\
+      ../eneres/ene_res.txt \\
+      ../../../close/analyses_2/eneres/ene_res.txt \\
       > a_e_r-r_sp=\${r}.txt
    echo "assl with r=\${r} done"
    ../postprocess.sh a_e_r-r_sp=\${r}.txt

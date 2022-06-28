@@ -1,0 +1,71 @@
+# Analyses for sparse representation of correlation relationship
+
+# Requirment
+
+Gromacs-2022, mdtraj(python), numpy (python), illustrate, parallel
+PBS job sucheduler
+
+# Directories
+
+  /open(state1)
+	/production (xtc, gro, etc)
+	/preparation (inp, gro, etc)
+	/analyses (courrent directory)
+  /close(state2)
+	/production
+	/preparation
+	/analyses
+
+# Analyses
+
+## superimpose the trajectories
+
+gmx select -f ../preparation/input/initial.pdb -s ../preparation/step10_final_density_stabilization/final_density_stabilization.tpr -on protein.ndx
+./superimpose.sh
+
+## rmsd and rmsf
+
+./rmsd.sh
+./rmsf.sh
+
+gnuplot rmsd.gp
+gnuplot rmsf.gp
+
+## make movie
+
+./movie_production.sh (use illustrate.sh)
+
+## decompose energy per residue
+
+./new_box.sh
+./production_rerun_job.sh (submit jobs, use production_rerun.mdp)
+./eneres-new_box.sh
+
+## calculate anomaly of residue-energy correlation
+
+./anomaly_e_r-r.sh (submit jobs, use postprocess.sh)
+
+./fig_anomaly-histgram_e-r-r.sh
+./fig_ss-of-cov_e_r-r.sh
+./fig_er-vs-er_map_e_r-r.sh
+./fig_er-vs-er_ts_e_r-r.sh
+
+./mol_ave-corre-res-highlighted.sh
+./mol_ave-high-anomaly-res.sh
+
+## calculate anomaly of residue-residue distance correlation
+
+./anomaly_d_r-r.sh (submit jobs, use contact_distance_union-open-close.py, postprocess.sh)
+
+./convert_a_d_r-r_to_r-r_pairs.sh
+./fig_ss-of-cov_d_r-r.sh
+
+./convert_a_d_r-r_to_r-r_pairs_anomaly-list.sh
+./fig_anomaly_on_map_d_r-r.sh
+
+./mk_mol_nst-ave-ss-d_r-r.sh
+for r in 0.50 0.60 0.70 0.80 0.90 ; do vmd -e mol_nst-ave-ss-d_r-r_sp=${r}.tcl ; done
+
+## calculate anomaly of sin / cos of phi, psi correlation
+
+./anomaly_d_r-r.sh (submit jobs, use sin-cos_phi-psi.py, postprocess.sh)

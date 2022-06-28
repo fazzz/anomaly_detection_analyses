@@ -13,7 +13,6 @@ wores = ( not resnr ${i} ) and group "Protein";
 wores;
 res = resnr ${i};
 res;
-group "System";
 group "Protein";
 EOF
     done
@@ -31,21 +30,21 @@ cd eneres/
 
 for i in \`seq -w ${1} ${2}\`; do
     gmx_mpi select \\
-     -f  ../production/production.gro \\
-     -s  ../production/production.tpr \\
+     -f  ../../production_2/production.gro \\
+     -s  ../../production_2/production.tpr \\
      -sf select\${i}.txt \\
      -on res\${i}.ndx
 
     gmx_mpi grompp -maxwarn 1 \\
      -f  production_rerun.mdp \\
-     -p  ../../preparation/input/topol.top \\
-     -c  ../../preparation/step10_final_density_stabilization/final_density_stabilization.gro \\
+     -p  ../../preparation/input/topol_wosol.top \\
+     -c  ../../preparation/input/WAT03/protein_box.gro \\
      -o  production_rerun\${i}.tpr \\
      -po production_rerun\${i}.mdp \\
      -n  res\${i}.ndx
 
     mpirun -np 8 gmx_mpi mdrun  \\
-     -rerun  ../../production_2/production.xtc \\
+     -rerun ../new_box.xtc \\
      -deffnm ener\${i} \\
      -s      production_rerun\${i}.tpr
 done
@@ -54,7 +53,7 @@ EOF
     qsub eneres/eneres${1}-${2}.sh
 }
 
-cp production_rerun.mdp eneres_scaled
+cp production_rerun.mdp eneres
 
 jobsubmit 001 055 20
 jobsubmit 056 110 21

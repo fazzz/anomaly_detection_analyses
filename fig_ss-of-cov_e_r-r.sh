@@ -1,6 +1,6 @@
 #!/bin/sh
 
-sparsity=( 0.70 0.60 0.50 0.40 0.30 )
+sparsity=( 0.90 0.80 0.70 0.60 0.50 0.40 0.30 )
 
 if [ ! -d fig_e_r-r ]; then
     mkdir fig_e_r-r

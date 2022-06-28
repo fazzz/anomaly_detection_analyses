@@ -25,7 +25,7 @@ xmax=1.0
 set xtics 0.3,0.1,0.9
 set xrange [xmin:xmax]
 
-plot "num_of_non-zero-elements_a_d_r-r_A.txt" u ($2-0.02):1 w boxes lw 2 lc rgb "pink" notitle, \
-     "num_of_non-zero-elements_a_d_r-r_B.txt" u ($2+0.02):1 w boxes lw 2 lc rgb "light-blue" notitle
+plot "num_of_non-zero-elements_a_d_r-r_A.txt" u ($2-0.02):($1-2) w boxes lw 2 lc rgb "pink" notitle, \
+     "num_of_non-zero-elements_a_d_r-r_B.txt" u ($2+0.02):($1-2) w boxes lw 2 lc rgb "light-blue" notitle
 
 quit

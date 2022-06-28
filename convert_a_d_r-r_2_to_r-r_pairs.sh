@@ -1,9 +1,9 @@
 #!/bin/sh
 
-sparsity=( 0.90 0.80 0.70 0.60 0.50 0.40 )
+sparsity=( 0.90 0.80 0.70 0.60 0.50 )
 
-anomaly=anomaly_d_r-r
-dist=dist_r-r
+anomaly=anomaly_d_r-r_2
+dist=dist_r-r_2
 
 for r in ${sparsity[*]}; do
     nl=$( wc -l ${anomaly}/a_d_r-r_sp=${r}_ss_A.txt | awk '{print $1}' )
