@@ -42,4 +42,13 @@ for r in ${sparsity[*]}; do
 	done > ${anomaly}/a_d_r-r_sp=${r}_anomaly_top31-40_pairs.txt
     fi
 
+    pair_top100=( $( sort -nrk 4,4 ${anomaly}/a_d_r-r_sp=${r}_anomaly.txt | awk '$4>0.0' | head -100 | tail -60 | awk '$1 ~ /^[0-9]+$/{print $1}' ) )
+    n_pair_top100=${#pair_top100[*]}
+
+    if [ ${n_pair_top100} -gt 0 ]; then
+	for i in ${pair_top100[*]}; do
+	    head -$i ${dist}/r-r_pairs_union-open-close.txt | tail -1
+	done > ${anomaly}/a_d_r-r_sp=${r}_anomaly_top41-100_pairs.txt
+    fi
+
 done

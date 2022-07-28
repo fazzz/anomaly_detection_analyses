@@ -17,8 +17,8 @@ angle = []
 for chunk in md.iterload(args.xtc, top=args.pdb, chunk=10):
     _, h = md.compute_phi(chunk)
     _, s = md.compute_psi(chunk)
-    angle.append(h[0])
-    angle.append(s[0])
+    hs = np.append(h[0],s[0])
+    angle.append(hs)
 
 # write sin / cos of phi and psi
 with open (args.out, mode="w") as f:

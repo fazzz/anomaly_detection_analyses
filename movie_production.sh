@@ -19,7 +19,7 @@ rm x*.pdb
 
 for p in *.png ; do
     i=$( basename "${p}" .png | awk -F"x" '{printf("%d\n"), $2}')
-    i=$( expr \${i} * 5 )
+    i=$( expr ${i} \* 5 )
 
     convert -geometry 800x500 -pointsize 50 -gravity south -font Times-Roman -annotate 0 "${i}ns" -fill black ${p} $( printf "%05d" ${i} ).tga
 

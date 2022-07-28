@@ -6,7 +6,8 @@
 #$ -cwd
 #$ -N assl_d_r-r
 
-sparsity=( 0.90 0.80 0.70 0.60 0.50 0.40 )
+#sparsity=( 0.90 0.80 0.70 0.60 0.50 0.40 )
+sparsity=( 0.96 0.94 0.92 )
 
 if [ ! -d dist_r-r_3 ]; then
     mkdir dist_r-r_3

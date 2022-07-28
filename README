@@ -2,46 +2,143 @@
 
 # Requirment
 
-Gromacs-2022, mdtraj(python), numpy (python), illustrate, parallel
+Gromacs-2022, illustrate, parallel,
+mdtraj(python), numpy (python), 
 PBS job sucheduler
 
-# Directories
+# Directories and scripts
 
-  /open(state1)
-	/production (xtc, gro, etc)
-	/preparation (inp, gro, etc)
-	/analyses (courrent directory)
-  /close(state2)
-	/production
-	/preparation
-	/analyses
+|--open
+|  |--analyses
+|  |  |--anomaly_d_r-r.sh
+|  |  |--anomaly_e_r-r.sh
+|  |  |--anomaly_phi-psi.sh
+|  |  |--postprocess.sh
+|  |  |--convert_a_d_r-r_to_r-r_pairs.sh
+|  |  |--convert_a_d_r-r_to_r-r_pairs_anomaly-list.sh
+|  |  |--convert_a_phi-psi_to_r-r_idx.sh
+|  |  |--fig_anomaly_on_map_d_r-r.sh
+|  |  |--fig_ss-of-cov_d_r-r.sh
+|  |  |--fig_anomaly-histgram_e-r-r.sh
+|  |  |--fig_ss-of-cov_e_r-r.sh
+|  |  |--fig_anomaly-histgram_phi-psi.sh
+|  |  |--fig_ss-of-cov_phi-psi.sh
+|  |  |--new_box.sh
+|  |  |--production_rerun_job.sh
+|  |  |--eneres-new_box.sh
+|  |  |--mk_mol_nst-ave-ss-d_r-r.sh
+|  |  |--illust.sh
+|  |  |--movie_production.sh
+|  |  |--superimpose.sh
+|  |  |--contact_distance_union-open-close.py
+|  |  |--sin-cos_phi-psi.py
+|  |  |--sin-cos_phi-psi_indices.py
+|  |  |--rmsd.gp
+|  |  |--rmsf.gp
+|  |  |--protein_viewpoint.pdb
+|  |  |--protein.ndx
+|  |--preparation
+|  |  |--10steps_preparation.sh
+|  |--production
+|  |  |--production.xtc
+|  |  |--production.mdp
+|  |  |--production_job.sh
+|  |--benchmarck
+|  |  |--perform_bench.sh
+|  |  |--node_core.sh
+|--close
+|  |--analyses
+|  |  |--new_box.sh
+|  |  |--production_rerun_job.sh
+|  |  |--eneres-new_box.sh
+|  |  |--mk_mol_nst-ave-ss-d_r-r.sh
+|  |  |--illust.sh
+|  |  |--movie_production.sh
+|  |  |--superimpose.sh
+|  |  |--contact_distance_union-open-close.py
+|  |  |--sin-cos_phi-psi.py
+|  |  |--sin-cos_phi-psi_indices.py
+|  |  |--rmsd.gp
+|  |  |--rmsf.gp
+|  |  |--protein_viewpoint.pdb
+|  |  |--protein.ndx
+|  |--preparation
+|  |  |--10steps_preparation.sh
+|  |--production
+|  |  |--production.xtc
+|  |  |--production.mdp
+|  |  |--production_job.sh
 
-# Analyses
+# Analyses ( What I have done )
 
 ## superimpose the trajectories
 
-gmx select -f ../preparation/input/initial.pdb -s ../preparation/step10_final_density_stabilization/final_density_stabilization.tpr -on protein.ndx
+gmx select -f ../preparation/input/initial.pdb \
+           -s ../preparation/step10_final_density_stabilization/final_density_stabilization.tpr \
+	    -on protein.ndx
+./superimpose.sh
+
+cd ../../close/analyses
+
+cp ../../open/analyses/protein.ndx .
 ./superimpose.sh
 
 ## rmsd and rmsf
 
-./rmsd.sh
-./rmsf.sh
+cd ../../open/analyses
+
+gnuplot rmsd.gp
+gnuplot rmsf.gp
+
+cd ../../close/analyses
 
 gnuplot rmsd.gp
 gnuplot rmsf.gp
 
 ## make movie
 
-./movie_production.sh (use illustrate.sh)
+cd ../../open/analyses
+
+./movie_production.sh (use illustrate.sh, protein_viewpoint.pdb)
+
+cd ../../close/analyses
+
+./movie_production.sh (use illustrate.sh, protein_viewpoint.pdb)
+
+## the nearsest average structure
+
+cd ../../open/analyses
+
+awk '($1 !~ /^(\#|\@)/) {print $0}' rmsd-ave.xvg | sort -nk 2,2 | head -1
+530410.0000000    0.1093045
+
+gmx trjconv -f superimposed-ave.xtc -s ave.pdb -b 530410 -e 530410 -o nst-ave.pdb
+
+cd ../../close/analyses
+
+awk '($1 !~ /^(\#|\@)/) {print $0}' rmsd-ave.xvg | sort -nk 2,2 | head -1
+463670.0000000    0.0953838
+
+gmx trjconv -f superimposed-ave.xtc -s ave.pdb -b 463670 -e 463670 -o nst-ave.pdb
+
 
 ## decompose energy per residue
+
+cd ../../open/analyses
+
+./new_box.sh
+./production_rerun_job.sh (submit jobs, use production_rerun.mdp)
+./eneres-new_box.sh
+
+cd ../../close/analyses
 
 ./new_box.sh
 ./production_rerun_job.sh (submit jobs, use production_rerun.mdp)
 ./eneres-new_box.sh
 
 ## calculate anomaly of residue-energy correlation
+
+cd ../../open/analyses
 
 ./anomaly_e_r-r.sh (submit jobs, use postprocess.sh)
 
@@ -55,7 +152,7 @@ gnuplot rmsf.gp
 
 ## calculate anomaly of residue-residue distance correlation
 
-./anomaly_d_r-r.sh (submit jobs, use contact_distance_union-open-close.py, postprocess.sh)
+qsub anomaly_d_r-r.sh (submit jobs, use contact_distance_union-open-close.py, postprocess.sh)
 
 ./convert_a_d_r-r_to_r-r_pairs.sh
 ./fig_ss-of-cov_d_r-r.sh
@@ -68,4 +165,10 @@ for r in 0.50 0.60 0.70 0.80 0.90 ; do vmd -e mol_nst-ave-ss-d_r-r_sp=${r}.tcl ;
 
 ## calculate anomaly of sin / cos of phi, psi correlation
 
-./anomaly_d_r-r.sh (submit jobs, use sin-cos_phi-psi.py, postprocess.sh)
+qsub anomaly_phi-psi.sh (submit jobs, use sin-cos_phi-psi.py, postprocess.sh)
+python3 sin-cos_phi-psi_indices.py nst-ave.pdb phi-psi/phi-psi_index.txt
+
+./fig_anomaly-histgram_phi-psi.sh
+
+./convert_a_phi-psi_to_r-r_idx.sh
+./fig_ss-of-cov_phi-psi.sh

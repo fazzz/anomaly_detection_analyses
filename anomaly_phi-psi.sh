@@ -1,13 +1,14 @@
 #$ -S /bin/sh
 #$ -V
-#$ -q all.q@pdis17
+#$ -q all.q@pdis18
 #$ -j y
 #$ -o assl_phi_psix.o
 #$ -cwd
 #$ -N assl_phi_psi
 
-sparsity=( 0.90 0.80 0.70 0.60 0.50 )
-nres=164
+#sparsity=( 0.90 0.80 0.70 0.60 0.50 )
+sparsity=( 0.40 0.30 0.20 0.10 )
+nres=163
 n=`expr ${nres} \* 4`
 
 if [ ! -d phi-psi ]; then
@@ -18,8 +19,8 @@ cd phi-psi
 
 if [ ! -f sin_cos_phi-psi.txt ]; then
     python3 ../sin-cos_phi-psi.py \
-	../superimposed-ave-skip10.xtc \
-	../protein_nst-ave.pdb \
+	../superimposed-ave.xtc \
+	../nst-ave.pdb \
 	sin_cos_phi-psi.txt
 fi
 
@@ -32,9 +33,9 @@ fi
 cd phi-psi
 
 if [ ! -f phi-psi.txt ]; then
-    python3 ../../../open/analyses_2/contact_distance_union-open-close.py \
-	../superimposed-ave-skip10.xtc \
-	../protein_nst-ave.pdb \
+    python3 ../../../open/analyses_2/sin-cos_phi-psi.py \
+	../superimposed-ave.xtc \
+	../nst-ave.pdb \
 	sin_cos_phi-psi.txt
 fi
 
@@ -50,7 +51,7 @@ echo "assl calculations will be started..."
 
 for r in ${sparsity[*]}; do
   echo "assl with r=${r} start"
-  assl2 -Sparsity ${r} -ndim ${ndist} \
+  assl2 -Sparsity ${r} -ndim ${n} \
                              ../phi-psi/sin_cos_phi-psi.txt \
       ../../../close/analyses_2/phi-psi/sin_cos_phi-psi.txt \
       > a_phi_psi_sp=${r}.txt
