@@ -24,7 +24,8 @@ fi
 cd ${mol}
 
 for r in ${sparsity[*]}; do
-    cat <<EOF > mol_${tcl_name}_sp=${r}_${A}.tcl
+    for pc in 1 2 3; do
+	cat <<EOF > mol_pc${pc}_sp=${r}_${A}.tcl
 axes location off
 
 proc draw_line_between_ca_ca {resi resj radi} {
@@ -45,23 +46,25 @@ mol modmaterial 0 0 Transparent
 
 graphics 0 color red
 EOF
-    cat ../${anomaly}/draw_line_between_ca_ca_anomaly_sp=${r} >> \
-	mol_${tcl_name}_sp=${r}_${A}.tcl
 
-    cat <<EOF >> mol_${tcl_name}_sp=${r}_${A}.tcl
-set filename nst-ave-a-d_r-r_sp=${r}_${A}
+	paste ../${anomaly}/draw_line_between_ca_ca_anomaly_sp=${r} \
+	    ../${pca}/pca_contact_distances_sp=0.90_pc${pc}.txt | \
+	    awk '{printf("%s %4d %4d %5.3f\n",$1,$2,$3,abs($5))} function abs(x){return (x>0)? x:-x}' \
+	    >> mol_pc${pc}_sp=${r}_${A}.tcl
+	
+	cat <<EOF >> mol_pc${pc}_sp=${r}_${A}.tcl
+set filename nst-ave-d_r-r_pc${pc}_sp=${r}_${A}
 render Tachyon \$filename
 "/Applications/VMD\ 1.9.4.app/Contents/vmd/tachyon_MACOSXX86" \\
     -aasamples 12 \$filename \\
     -format TARGA -res 1600 1200 \\
     -o \$filename.tga
-
 quit
 EOF
 
 ########################################################################################
 
-    cat <<EOF > mol_${tcl_name}_sp=${r}_${B}.tcl
+	cat <<EOF > mol_pc${pc}_sp=${r}_${B}.tcl
 axes location off
 
 proc draw_line_between_ca_ca {resi resj radi} {
@@ -82,17 +85,21 @@ mol modmaterial 0 0 Transparent
 
 graphics 0 color red
 EOF
-    cat ../${anomaly}/draw_line_between_ca_ca_anomaly_sp=${r} >> \
-	mol_${tcl_name}_sp=${r}_${B}.tcl
 
-    cat <<EOF >> mol_${tcl_name}_sp=${r}_${B}.tcl
-set filename nst-ave-a-d_r-r_sp=${r}_${B}
+	paste ../${anomaly}/draw_line_between_ca_ca_anomaly_sp=${r} \
+	    ../${pca}/pca_contact_distances_sp=0.90_pc${pc}.txt | \
+	    awk '{printf("%s %4d %4d %5.3f\n",$1,$2,$3,abs($5))} function abs(x){return (x>0)? x:-x}' \
+	    >> mol_pc${pc}_sp=${r}_${B}.tcl
+
+	cat <<EOF >> mol_pc${pc}_sp=${r}_${B}.tcl
+set filename nst-ave-d_r-r_pc${pc}_sp=${r}_${B}
 render Tachyon \$filename
 "/Applications/VMD\ 1.9.4.app/Contents/vmd/tachyon_MACOSXX86" \\
     -aasamples 12 \$filename \\
     -format TARGA -res 1600 1200 \\
     -o \$filename.tga
-
 quit
 EOF
+    done
 done
+

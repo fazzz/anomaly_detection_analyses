@@ -2,8 +2,7 @@
 
 # Requirment
 
-Gromacs-2022, illustrate, parallel,
-mdtraj(python), numpy (python), 
+Gromacs-2022, illustrate, parallel, mdtraj(python), numpy(python), 
 PBS job sucheduler
 
 # Directories and scripts
@@ -15,10 +14,9 @@ PBS job sucheduler
 |  |  |--anomaly_phi-psi.sh
 |  |  |--postprocess.sh
 |  |  |--convert_a_d_r-r_to_r-r_pairs.sh
-|  |  |--convert_a_d_r-r_to_r-r_pairs_anomaly-list.sh
 |  |  |--convert_a_phi-psi_to_r-r_idx.sh
 |  |  |--fig_anomaly_on_map_d_r-r.sh
-|  |  |--fig_ss-of-cov_d_r-r.sh
+|  |  |--fig_ss-of-cov_network_d_r-r.sh
 |  |  |--fig_anomaly-histgram_e-r-r.sh
 |  |  |--fig_ss-of-cov_e_r-r.sh
 |  |  |--fig_anomaly-histgram_phi-psi.sh
@@ -55,9 +53,6 @@ PBS job sucheduler
 |  |  |--illust.sh
 |  |  |--movie_production.sh
 |  |  |--superimpose.sh
-|  |  |--contact_distance_union-open-close.py
-|  |  |--sin-cos_phi-psi.py
-|  |  |--sin-cos_phi-psi_indices.py
 |  |  |--rmsd.gp
 |  |  |--rmsf.gp
 |  |  |--protein_viewpoint.pdb
@@ -154,11 +149,14 @@ cd ../../open/analyses
 
 qsub anomaly_d_r-r.sh (submit jobs, use contact_distance_union-open-close.py, postprocess.sh)
 
-./convert_a_d_r-r_to_r-r_pairs.sh
-./fig_ss-of-cov_d_r-r.sh
+./convert_a_d_r-r_to_r-r_pairs.sh ./para_d_r-r.sh
+./fig_ss-of-cov_network_d_r-r.sh ./para_d_r-r.sh
+./fig_anomaly_on_map_d_r-r.sh ./para_d_r-r.sh
 
-./convert_a_d_r-r_to_r-r_pairs_anomaly-list.sh
-./fig_anomaly_on_map_d_r-r.sh
+#./convert_a_d_r-r_to_r-r_pairs.sh
+#./fig_ss-of-cov_d_r-r.sh
+#./convert_a_d_r-r_to_r-r_pairs_anomaly-list.sh
+#./fig_anomaly_on_map_d_r-r.sh
 
 ./mk_mol_nst-ave-ss-d_r-r.sh
 for r in 0.50 0.60 0.70 0.80 0.90 ; do vmd -e mol_nst-ave-ss-d_r-r_sp=${r}.tcl ; done
