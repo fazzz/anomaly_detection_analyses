@@ -3,7 +3,8 @@
 #sparsity=( 0.50 0.60 0.70 0.80 0.90 0.92 )
 #sparsity=( 0.93 0.91 )
 #sparsity=( 0.90 0.91 )
-sparsity=( 0.80 0.90 0.91 0.92 )
+#sparsity=( 0.80 0.90 0.91 0.92 )
+sparsity=( 0.90 0.91 0.92 )
 
 anomaly=anomaly_d_r-r_3
 dist=dist_r-r_3

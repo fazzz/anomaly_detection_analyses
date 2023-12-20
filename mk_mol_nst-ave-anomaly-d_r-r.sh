@@ -35,6 +35,8 @@ proc draw_line_between_ca_ca {resi resj radi} {
     set coordj [ lindex [\$atomj get {x y z}] 0 ]
 
     draw cylinder \$coordi \$coordj radius \$radi resolution 20
+    draw sphere \$coordi radius 0.3 resolution 20
+    draw sphere \$coordj radius 0.3 resolution 20
 }
 
 mol new {../protein_nst-ave_viewpoint.pdb} type {pdb}
@@ -72,6 +74,8 @@ proc draw_line_between_ca_ca {resi resj radi} {
     set coordj [ lindex [\$atomj get {x y z}] 0 ]
 
     draw cylinder \$coordi \$coordj radius \$radi resolution 20
+    draw sphere \$coordi radius 0.3 resolution 20
+    draw sphere \$coordj radius 0.3 resolution 20
 }
 
 mol new {../protein_nst-ave_viewpoint_${B}.pdb} type {pdb}

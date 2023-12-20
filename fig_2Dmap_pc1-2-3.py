@@ -14,15 +14,16 @@ args = parser.parse_args()
 
 # make map
 def plot_2Dmap(x,y,xlabel,ylabel,outfilename):
-    fig = plt.figure(figsize=(8,6))
+#    fig = plt.figure(figsize=(8,6))
+    fig = plt.figure(figsize=(4,3))
     ax = fig.add_subplot(1,1,1)
 
     H = ax.hist2d(x,y,bins=100,cmap=cm.jet,
                   density=True, 
                   norm=mpl.colors.LogNorm())
 
-    ax.set_xlabel(xlabel, fontsize=16)
-    ax.set_ylabel(ylabel, fontsize=16)
+    ax.set_xlabel(xlabel, fontsize=14)
+    ax.set_ylabel(ylabel, fontsize=14)
     fig.colorbar(H[3],ax=ax)
 
     fig.savefig(f"{outfilename}_{xlabel}vs{ylabel}.png", 

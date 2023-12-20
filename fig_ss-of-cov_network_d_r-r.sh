@@ -89,10 +89,18 @@ EOF
     color=$( echo "scale=2.0;${color} + (1.0/${n_s})" | bc )
 done
 
+# colorbar
+for s in 1 2 ; do
+    for i in `seq 1 ${numres}`; do 
+	resindex=`expr $i + $nc`
+	printf "%4d %4d %4d\n" $s $resindex $i
+    done
+done > colorbar.txt
+
 cat <<EOF > ss-network_of-cov_d_r-r.gp
 #!/usr/local/bin/gnuplot
 
-set terminal postscript eps enhanced background rgb 'white' color size 10cm , 10cm  "Times" 20
+set terminal postscript eps enhanced background rgb 'white' color size 10cm , 12cm  "Times" 20
 set output "ss-newtwork_of-cov_d_r-r.eps"
 
 set encoding iso_8859_1
@@ -110,6 +118,8 @@ set cblabel font "Times-Roman,10"
 set key    font "Times-Roman,20"
 
 set noborder
+
+set multiplot layout 2,1
 
 set key right bottom
 
@@ -139,6 +149,11 @@ unset colorbox
 
 set xrange [-1.2:1.2]
 set yrange [-1.2:1.2]
+
+set rmargin screen 0.90
+set lmargin screen 0.10
+set tmargin screen 0.90
+set bmargin screen 0.30
 
 plot \\
 EOF
@@ -181,6 +196,32 @@ done > tmp03
 cat <<EOF >> ss-network_of-cov_d_r-r.gp
 "tmp03" u (1.1*cos(2.0*pi*(\$0/${n}))):(1.1*sin(2.0*pi*(\$0/${n}))):(\$1/${numres}*7+4) w l lw 20.0 lc palette notitle, \\
 "tmp03" u (1.150*cos(2.0*pi*(\$0/${n}))):(1.150*sin(2.0*pi*(\$0/${n}))):(\$2/${numres}*7+4) w l lw 20.0 lc palette notitle
+
+set palette defined (0 '#D73027',\\
+    	    	     1 '#F46D43',\\
+		     2 '#FDAE61',\\
+		     3 '#FEE08B',\\
+		     4 '#D9EF8B',\\
+		     5 '#A6D96A',\\
+		     6 '#66BD63',\\
+		     7 '#1A9850' )
+
+set xrange [${min}:${max}]
+set yrange [1:2]
+
+set xtics font "Times-Roman,10"
+set xtics ${tics_min},${tics},${tics_max}
+
+set size ratio 0.1
+set xlabel "Index of Residue" font "Times-Roman,14" offset 0.0, 0.5
+
+set rmargin screen 0.95
+set lmargin screen 0.12
+set tmargin screen 0.25
+set bmargin screen 0.22
+
+plot 'colorbar.txt' u 2:1:(\$3/${numres}*8) w image notitle
+
 quit
 EOF
 gnuplot ss-network_of-cov_d_r-r.gp
@@ -188,3 +229,4 @@ gnuplot ss-network_of-cov_d_r-r.gp
 rm -r tmp
 rm tmp01
 rm tmp02
+

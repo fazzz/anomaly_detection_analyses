@@ -1,4 +1,4 @@
-# calculate PCA of distance of contact-pairs from two independent trajectories
+# projected on PC of distance of contact-pairs from two independent trajectories
 
 import argparse as arg
 import numpy as np
@@ -55,19 +55,19 @@ for chunk in md.iterload(args.xtc2, top=args.pdb, chunk=1):
     dist_chunk, pairs_chunk = md.compute_contacts(chunk, contact_pairs)
     dist.append(dist_chunk[0])
 
-# compute pc 1,2,...,5 for contact distances
-pca_higer=PCA(n_components=5)
+# compute pc 1,2,3 for contact distances
+pca_higer=PCA(n_components=3)
 reduced_distance=pca_higer.fit_transform(dist)
 
-# write pc 1,2,...,5
+# write pc 1, 2, 3
 with open (f"{args.out}_pc.txt", mode="w") as f:
     for frame in reduced_distance:
-        f.write("%8.3f %8.3f %8.3f %8.3f %8.3f\n" %(frame[0],frame[1],frame[2],frame[3],frame[4]))
+        f.write("%8.3f %8.3f %8.3f\n" %(frame[0],frame[1],frame[2]))
 
 # write reduced_distance as binary
 np.save(f"{args.out}_reduced_distances.npy",reduced_distance)
 
-#plt.rcParams['font.family'] = 'Times New Roman'
+plt.rcParams['font.family'] = 'Times New Roman'
 # make 2D contour graph
 plot_2Dmap(reduced_distance[:,0],reduced_distance[:,1],'PC1','PC2',args.out)
 plot_2Dmap(reduced_distance[:,0],reduced_distance[:,2],'PC1','PC3',args.out)
@@ -97,16 +97,6 @@ with open (f"{args.out}_pc2.txt", mode="w") as f:
 # write pc3 components
 with open (f"{args.out}_pc3.txt", mode="w") as f:
     for e in pca.components_[2]:
-        f.write("%8.3f\n" %(e))
-
-# write pc4 components
-with open (f"{args.out}_pc4.txt", mode="w") as f:
-    for e in pca.components_[3]:
-        f.write("%8.3f\n" %(e))
-
-# write pc5 components
-with open (f"{args.out}_pc5.txt", mode="w") as f:
-    for e in pca.components_[4]:
         f.write("%8.3f\n" %(e))
 
 # make plot of eigen-value contribution

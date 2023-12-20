@@ -148,10 +148,19 @@ cd ../../open/analyses
 ## calculate anomaly of residue-residue distance correlation
 
 qsub anomaly_d_r-r.sh (submit jobs, use contact_distance_union-open-close.py, postprocess.sh)
+or
+qsub anomaly_d_r-r_2.sh
+qsub anomaly_d_r-r_3.sh
+qsub anomaly_d_r-r_4.sh
 
 ./convert_a_d_r-r_to_r-r_pairs.sh ./para_d_r-r.sh
 ./fig_ss-of-cov_network_d_r-r.sh ./para_d_r-r.sh
 ./fig_anomaly_on_map_d_r-r.sh ./para_d_r-r.sh
+
+d_r-r.sh   : cutoff 0.45 ij 4
+d_r-r_2.sh : cutoff 0.6  ij 10
+d_r-r_3.sh : cutoff 0.8  ij 10
+d_r-r_4.sh : cutoff 0.8  ij 4
 
 #./convert_a_d_r-r_to_r-r_pairs.sh
 #./fig_ss-of-cov_d_r-r.sh
