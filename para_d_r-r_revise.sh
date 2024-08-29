@@ -40,7 +40,7 @@ analyses_B=analyses_1
 
 pca=fig_d_r-r_3_pca
 
-cutoff=0.80 
+cutoff=0.45
 ij=10
 
 color_A=( dummy "light-blue" "medium-blue" "blue"  )

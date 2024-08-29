@@ -179,3 +179,10 @@ python3 sin-cos_phi-psi_indices.py nst-ave.pdb phi-psi/phi-psi_index.txt
 
 ./convert_a_phi-psi_to_r-r_idx.sh
 ./fig_ss-of-cov_phi-psi.sh
+
+# For revision
+
+./Fig_5_a_revision-version.sh ./para_d_r-r_3.sh
+./Fig_5_b_revision-version.sh ./para_d_r-r_3.sh
+
+
